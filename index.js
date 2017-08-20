@@ -13,6 +13,7 @@ bluebird.promisifyAll(redis.Multi.prototype);
 const client = redis.createClient(process.env.REDIS_URL);
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
+const weight = process.env.STEEM_VOTE_WEIGHT || 10000;
 let awaitingBlocks = [];
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -68,7 +69,7 @@ const parseNextBlock = async () => {
                 voter: username,
                 author: op[1].author,
                 permlink: op[1].permlink,
-                weight: 10000,
+                weight,
               });
               console.log('Vote Success', op[1].author, op[1].permlink, result);
             } catch (err) {
