@@ -5,8 +5,8 @@ const _ = require('lodash');
 const http = require('http');
 const https = require('https');
 
-http.globalAgent.maxSockets = Infinity;
-https.globalAgent.maxSockets = Infinity;
+http.globalAgent.maxSockets = 100;
+https.globalAgent.maxSockets = 100;
 steem.api.setOptions({ transport: 'http' });
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
@@ -17,9 +17,9 @@ let awaitingBlocks = [];
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const streamIrrBlockNumFrom = (from, cb) => {
+const streamBlockNumFrom = (from, cb) => {
   let updated;
-  steem.api.streamBlockNumber('irreversible', (err, blockNum) => {
+  steem.api.streamBlockNumber((err, blockNum) => {
     if (!updated && from !== blockNum) {
       updated = true;
       for (let i = parseInt(from) + 1; i < blockNum; i++) {
@@ -36,7 +36,7 @@ const start = async () => {
   const lastBlockNum = await client.getAsync('blockNum');
   console.log('Last Block Num', lastBlockNum);
 
-  streamIrrBlockNumFrom(lastBlockNum, async (err, blockNum) => {
+  streamBlockNumFrom(lastBlockNum, async (err, blockNum) => {
     awaitingBlocks.push(blockNum);
 
     if (!started) {
