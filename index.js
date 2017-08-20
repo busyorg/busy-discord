@@ -81,8 +81,12 @@ const parseNextBlock = async () => {
     }
 
     /** Store On Redis Last Parsed Block */
-    await client.setAsync('blockNum', blockNum);
-    console.log('Block Parsed', blockNum);
+    try {
+      await client.setAsync('blockNum', blockNum);
+      console.log('Block Parsed', blockNum);
+    } catch (err) {
+      console.log('Error Save Redis', blockNum, err);
+    }
 
     delete awaitingBlocks[0];
     awaitingBlocks = _.compact(awaitingBlocks);
