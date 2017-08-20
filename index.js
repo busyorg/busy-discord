@@ -13,7 +13,7 @@ bluebird.promisifyAll(redis.Multi.prototype);
 const client = redis.createClient(process.env.REDIS_URL);
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
-const weight = process.env.STEEM_VOTE_WEIGHT || 10000;
+const weight = parseInt(process.env.STEEM_VOTE_WEIGHT || 10000);
 let awaitingBlocks = [];
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
