@@ -28,7 +28,7 @@ const trigger = (op) => {
       if (started) {
         bot.postMessageToChannel(
           'activity',
-          `*@${op[1].author}/${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
+          `*@${op[1].author}* with ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
           { mrkdwn_in: ["text"] }
         );
       }
