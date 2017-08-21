@@ -24,11 +24,11 @@ const trigger = (op) => {
       && jsonMetadata.app
       && jsonMetadata.app.includes('busy/')
     ) {
-      console.log(jsonMetadata.app);
+      console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
       if (started) {
         bot.postMessageToChannel(
           'activity',
-          `*${op[1].parent_permlink}/@${op[1].author}/${op[1].permlink}*: \`\`\`${op[1].body}\`\`\``,
+          `*@${op[1].author}/${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
           { mrkdwn_in: ["text"] }
         );
       }
