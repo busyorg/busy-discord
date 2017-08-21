@@ -5,6 +5,7 @@ const _ = require('lodash');
 const http = require('http');
 const https = require('https');
 const vote = require('./vote');
+const slack = require('./slack');
 const utils = require('./utils');
 
 http.globalAgent.maxSockets = 100;
@@ -42,6 +43,7 @@ const parseNextBlock = async () => {
       for (let tx of block.transactions) {
         for (let op of tx.operations) {
           await vote(op);
+          slack(op);
         }
       }
     }
