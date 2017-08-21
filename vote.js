@@ -9,13 +9,20 @@ const weight = parseInt(process.env.STEEM_VOTE_WEIGHT || 10000);
 /** Detect Post From Busy 2 And Vote For It */
 const trigger = async (op) => {
   if (op[0] === 'comment' && op[1].parent_author === '') {
-    let app;
+    let jsonMetadata;
     try {
-      app = JSON.parse(op[1].json_metadata).app;
+      jsonMetadata = JSON.parse(op[1].json_metadata);
     } catch (err) {
     }
 
-    if (app && app === 'busy/2.0.0') {
+    if (
+      jsonMetadata.app
+      && jsonMetadata.app === 'busy/2.0.0' // Must have 'busy/2.0.0' as app
+      && jsonMetadata.tags
+      && !jsonMetadata.tags.includes('test') // Must not include tag 'test'
+      && jsonMetadata.tags.includes('busy') // Must include tag 'busy'
+    ) {
+
       try {
         const result = await steem.broadcast.voteWithAsync(postingWif, {
           voter: username,
@@ -27,6 +34,7 @@ const trigger = async (op) => {
       } catch (err) {
         console.log('Vote Error', op[1].author, op[1].permlink, err);
       }
+
       await utils.sleep(4000);
     }
   }
