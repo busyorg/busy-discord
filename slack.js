@@ -3,7 +3,7 @@ const Bot = require('slackbots');
 let started;
 const settings = {
   token: process.env.SLACK_API_TOKEN,
-  name: 'My Bot'
+  name: 'robot'
 };
 const bot = new Bot(settings);
 bot.on('start', () => {
@@ -28,7 +28,7 @@ const trigger = (op) => {
       if (started) {
         bot.postMessageToChannel(
           'activity',
-          `*@${op[1].author}* with ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
+          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
           { mrkdwn_in: ["text"] }
         );
       }
