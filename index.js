@@ -1,19 +1,15 @@
 const steem = require('steem');
-const redis = require('redis');
-const bluebird = require('bluebird');
 const _ = require('lodash');
 const http = require('http');
 const https = require('https');
-const vote = require('./vote');
-const slack = require('./slack');
-const utils = require('./utils');
+const client = require('./helpers/redis');
+const vote = require('./events/vote');
+const slack = require('./events/slack');
+const utils = require('./helpers/utils');
 
 http.globalAgent.maxSockets = 100;
 https.globalAgent.maxSockets = 100;
 //steem.api.setOptions({ transport: 'http' });
-bluebird.promisifyAll(redis.RedisClient.prototype);
-bluebird.promisifyAll(redis.Multi.prototype);
-const client = redis.createClient(process.env.REDIS_URL);
 let awaitingBlocks = [];
 
 const start = async () => {
