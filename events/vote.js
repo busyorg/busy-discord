@@ -6,6 +6,7 @@ const client = require('../helpers/redis');
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
 const weight = parseInt(process.env.STEEM_VOTE_WEIGHT || 10000);
+const minWeight = parseInt(process.env.STEEM_VOTE_MIN_WEIGHT || 1000);
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
 /** Detect Post From Busy 2 And Vote For It */
@@ -20,7 +21,7 @@ const trigger = async (op) => {
     if (
       jsonMetadata
       && jsonMetadata.app
-      && jsonMetadata.app === 'busy/2.0.0' // Must have 'busy/2.0.0' as app
+      && jsonMetadata.app.includes('busy') // Must have 'busy/' as app
       && jsonMetadata.tags
       && !jsonMetadata.tags.includes('test') // Must not include tag 'test'
       && jsonMetadata.tags.includes('busy') // Must include tag 'busy'
@@ -33,7 +34,7 @@ const trigger = async (op) => {
             voter: username,
             author: op[1].author,
             permlink: op[1].permlink,
-            weight,
+            weight: (jsonMetadata.app === 'busy/2.0.0') ? weight : minWeight,
           });
 
           await client.setAsync(`${op[1].author}:hasVote`, 'true', 'EX', delay);
