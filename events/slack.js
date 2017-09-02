@@ -1,4 +1,5 @@
 const Bot = require('slackbots');
+const alpha = require('./alpha.json');
 
 let started;
 const settings = {
@@ -19,15 +20,29 @@ const trigger = (op) => {
     } catch (err) {
     }
 
-    if (
-      jsonMetadata
-      && jsonMetadata.app
-      && jsonMetadata.app.includes('busy/')
-    ) {
-      console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
-      if (started) {
+    if (started && jsonMetadata && jsonMetadata.app) {
+
+      if (jsonMetadata.app.includes('busy/1')) {
+        console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
         bot.postMessageToChannel(
-          'activity',
+          'activity-1',
+          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
+          { mrkdwn_in: ["text"] }
+        );
+      }
+
+      if (jsonMetadata.app.includes('busy/2')) {
+        console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
+        bot.postMessageToChannel(
+          'activity-2',
+          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
+          { mrkdwn_in: ["text"] }
+        );
+      }
+
+      if (alpha.includes(op[1].author) && !jsonMetadata.app.includes('busy')) {
+        bot.postMessageToChannel(
+          'activity-0',
           `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
           { mrkdwn_in: ["text"] }
         );
