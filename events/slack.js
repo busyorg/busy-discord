@@ -24,31 +24,29 @@ const trigger = (op) => {
 
       if (jsonMetadata.app.includes('busy/1')) {
         console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
-        bot.postMessageToChannel(
-          'activity-1',
-          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
-          { mrkdwn_in: ["text"] }
-        );
+        postMessage('activity-1', op);
       }
 
       if (jsonMetadata.app.includes('busy/2')) {
         console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
-        bot.postMessageToChannel(
-          'activity-2',
-          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
-          { mrkdwn_in: ["text"] }
-        );
+        postMessage('activity-2', op);
       }
 
       if (alpha.includes(op[1].author) && !jsonMetadata.app.includes('busy')) {
-        bot.postMessageToChannel(
-          'activity-0',
-          `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app}: \`\`\`${op[1].body}\`\`\``,
-          { mrkdwn_in: ["text"] }
-        );
+        postMessage('activity-0', op);
       }
     }
   }
+};
+
+const postMessage = (channel, op) => {
+  let message = `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app} `;
+  message += op[1].parent_author ? 'post' : 'comment';
+  bot.postMessageToChannel(
+    channel,
+    message,
+    { mrkdwn_in: ["text"] }
+  );
 };
 
 module.exports = trigger;
