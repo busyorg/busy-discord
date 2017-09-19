@@ -17,8 +17,7 @@ const trigger = (op) => {
     let jsonMetadata;
     try {
       jsonMetadata = JSON.parse(op[1].json_metadata);
-    } catch (err) {
-    }
+    } catch (err) { }
 
     if (started && jsonMetadata && jsonMetadata.app) {
 
@@ -40,6 +39,11 @@ const trigger = (op) => {
 };
 
 const postMessage = (channel, op) => {
+  let jsonMetadata;
+  try {
+    jsonMetadata = JSON.parse(op[1].json_metadata);
+  } catch (err) { }
+
   let message = `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app} `;
   message += op[1].parent_author ? 'post' : 'comment';
   bot.postMessageToChannel(
