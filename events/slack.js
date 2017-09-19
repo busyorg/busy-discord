@@ -45,7 +45,7 @@ const postMessage = (channel, op) => {
   } catch (err) { }
 
   let message = `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app} `;
-  message += op[1].parent_author ? 'post' : 'comment';
+  message += op[1].parent_author ? 'comment' : 'post';
   bot.postMessageToChannel(
     channel,
     message,
