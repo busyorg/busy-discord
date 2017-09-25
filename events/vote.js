@@ -1,13 +1,27 @@
 const steem = require('steem');
 const _ = require('lodash');
+const fetch = require('node-fetch');
+
 const utils = require('../helpers/utils');
 const client = require('../helpers/redis');
 
+fetch.Promise = require('bluebird');
+
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
-const weight = parseInt(process.env.STEEM_VOTE_WEIGHT || 10000);
-const minWeight = parseInt(process.env.STEEM_VOTE_MIN_WEIGHT || 1000);
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
+
+const MIN_VESTS = 10000000; // Dolphin
+const MAX_VESTS = 500000000; // Half Whale
+
+const calculateVotingPower = async (username) => {
+  const url = `https://steemdb.com/api/accounts?account[]=${username}`;
+  const [account] = await fetch(url)
+    .then(res => res.json());
+  let votingPower = account.followers_mvest >= MIN_VESTS ? parseFloat(10000 / MAX_VESTS * account.followers_mvest) : 0;
+  votingPower = votingPower > 10000 ? 10000 : parseInt(votingPower);
+  return votingPower;
+};
 
 /** Detect Post From Busy 2 And Vote For It */
 const trigger = async (op) => {
@@ -29,12 +43,13 @@ const trigger = async (op) => {
 
       const hasVote = await client.getAsync(`${op[1].author}:hasVote`);
       if (!hasVote) {
+        const weight = await calculateVotingPower(op[1].author);
         try {
           const result = await steem.broadcast.voteWithAsync(postingWif, {
             voter: username,
             author: op[1].author,
             permlink: op[1].permlink,
-            weight: (jsonMetadata.app === 'busy/2.0.0') ? weight : minWeight,
+            weight,
           });
 
           await client.setAsync(`${op[1].author}:hasVote`, 'true', 'EX', delay);
