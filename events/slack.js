@@ -22,12 +22,10 @@ const trigger = (op) => {
     if (started && jsonMetadata && jsonMetadata.app) {
 
       if (jsonMetadata.app.includes('busy/1')) {
-        console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
         postMessage('activity-1', op);
       }
 
       if (jsonMetadata.app.includes('busy/2')) {
-        console.log('New Comment', `@${op[1].author} with ${jsonMetadata.app}`);
         postMessage('activity-2', op);
       }
 
@@ -44,13 +42,19 @@ const postMessage = (channel, op) => {
     jsonMetadata = JSON.parse(op[1].json_metadata);
   } catch (err) { }
 
-  let message = `*<https://nd.busy.org/@${op[1].author}|@${op[1].author}>* ${jsonMetadata.app} `;
+  let message = `*<https://nd.busy.org/${op[1].parent_permlink}/@${op[1].author}/${op[1].permlink}|@${op[1].author}>* ${jsonMetadata.app} `;
   message += op[1].parent_author ? 'comment' : 'post';
   bot.postMessageToChannel(
     channel,
     message,
     { mrkdwn_in: ["text"] }
   );
+
+  let log = op[1].parent_author ? 'New comment' : 'New post';
+  log += `@${op[1].author}/${op[1].permlink} with ${jsonMetadata.app}: `;
+  if (jsonMetadata.app.includes('busy/')) {
+    console.log(log);
+  }
 };
 
 module.exports = trigger;

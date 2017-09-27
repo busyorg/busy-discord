@@ -23,7 +23,7 @@ const calculateVotingPower = async (username) => {
   return votingPower;
 };
 
-/** Detect Post From Busy 2 And Vote For It */
+/** Detect post from Busy and vote for it */
 const trigger = async (op) => {
   if (op[0] === 'comment' && op[1].parent_author === '') {
     let jsonMetadata;
@@ -42,7 +42,7 @@ const trigger = async (op) => {
     ) {
 
       const hasVote = await client.getAsync(`${op[1].author}:hasVote`);
-      if (!hasVote) {
+      if (!hasVote && !op[1].body.includes('@@')) {
         const weight = await calculateVotingPower(op[1].author);
         try {
           const result = await steem.broadcast.voteWithAsync(postingWif, {
@@ -53,13 +53,13 @@ const trigger = async (op) => {
           });
 
           await client.setAsync(`${op[1].author}:hasVote`, 'true', 'EX', delay);
-          console.log('Vote Success', op[1].author, op[1].permlink, result);
+          console.log('Vote success', op[1].author, op[1].permlink, result);
         } catch (err) {
-          console.log('Vote Error', op[1].author, op[1].permlink, err);
+          console.log('Vote error', op[1].author, op[1].permlink, err);
         }
         await utils.sleep(4000);
       } else {
-        console.log('Has Vote', op[1].author, op[1].permlink);
+        console.log('Has already vote', op[1].author, op[1].permlink);
       }
     }
   }
