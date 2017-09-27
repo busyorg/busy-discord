@@ -43,6 +43,7 @@ const postMessage = (channel, op) => {
   } catch (err) { }
 
   let message = `*<https://nd.busy.org/${op[1].parent_permlink}/@${op[1].author}/${op[1].permlink}|@${op[1].author}>* ${jsonMetadata.app} `;
+  message += op[1].body.includes('@@') ? 'New ' : 'Edit ';
   message += op[1].parent_author ? 'comment' : 'post';
   bot.postMessageToChannel(
     channel,
@@ -50,7 +51,8 @@ const postMessage = (channel, op) => {
     { mrkdwn_in: ["text"] }
   );
 
-  let log = op[1].parent_author ? 'New comment' : 'New post';
+  let log = op[1].body.includes('@@') ? 'New ' : 'Edit ';
+  log += op[1].parent_author ? 'comment ' : 'post ';
   log += `@${op[1].author}/${op[1].permlink} with ${jsonMetadata.app}: `;
   if (jsonMetadata.app.includes('busy/')) {
     console.log(log);
