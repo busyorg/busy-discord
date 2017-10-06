@@ -9,7 +9,11 @@ const utils = require('./helpers/utils');
 
 http.globalAgent.maxSockets = 100;
 https.globalAgent.maxSockets = 100;
-steem.api.setOptions({ url: 'wss://steemd-int.steemit.com' });
+
+if (process.env.STEEMJS_URL) {
+  steem.api.setOptions({ url: process.env.STEEMJS_URL });
+}
+
 let awaitingBlocks = [];
 
 const start = async () => {
