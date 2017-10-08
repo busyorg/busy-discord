@@ -35,6 +35,7 @@ const trigger = async (op) => {
     if (
       jsonMetadata
       && jsonMetadata.app
+      && typeof jsonMetadata.app === 'string'
       && jsonMetadata.app.includes('busy') // Must have 'busy/' as app
       && jsonMetadata.tags
       && !jsonMetadata.tags.includes('test') // Must not include tag 'test'

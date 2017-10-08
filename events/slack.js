@@ -19,7 +19,7 @@ const trigger = (op) => {
       jsonMetadata = JSON.parse(op[1].json_metadata);
     } catch (err) { }
 
-    if (started && jsonMetadata && jsonMetadata.app) {
+    if (started && jsonMetadata && jsonMetadata.app && typeof jsonMetadata.app === 'string') {
 
       if (jsonMetadata.app.includes('busy/1')) {
         postMessage('activity-1', op);
@@ -54,7 +54,7 @@ const postMessage = (channel, op) => {
   let log = op[1].body.includes('@@') ? 'Edit ' : 'New ';
   log += op[1].parent_author ? 'comment ' : 'post ';
   log += `@${op[1].author}/${op[1].permlink} with ${jsonMetadata.app}: `;
-  if (jsonMetadata && jsonMetadata.app && jsonMetadata.app.includes('busy/')) {
+  if (jsonMetadata && jsonMetadata.app && typeof jsonMetadata.app === 'string' && jsonMetadata.app.includes('busy/')) {
     console.log(log);
   }
 };
