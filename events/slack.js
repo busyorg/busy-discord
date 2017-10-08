@@ -29,7 +29,7 @@ const trigger = (op) => {
         postMessage('activity-2', op);
       }
 
-      if (alpha.includes(op[1].author) && (!jsonMetadata || !jsonMetadata.app || !jsonMetadata.app.includes('busy'))) {
+      if (alpha.includes(op[1].author) && !jsonMetadata.app.includes('busy')) {
         postMessage('activity-0', op);
       }
     }
