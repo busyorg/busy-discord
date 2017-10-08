@@ -54,7 +54,7 @@ const postMessage = (channel, op) => {
   let log = op[1].body.includes('@@') ? 'Edit ' : 'New ';
   log += op[1].parent_author ? 'comment ' : 'post ';
   log += `@${op[1].author}/${op[1].permlink} with ${jsonMetadata.app}: `;
-  if (jsonMetadata.app.includes('busy/')) {
+  if (jsonMetadata && jsonMetadata.app && jsonMetadata.app.includes('busy/')) {
     console.log(log);
   }
 };
