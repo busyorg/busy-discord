@@ -16,10 +16,14 @@ const MAX_VESTS = 4000000000; // 4 Whales
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
-  const [account] = await fetch(url)
-    .then(res => res.json());
-  let votingPower = account.followers_mvest >= MIN_VESTS ? parseFloat(10000 / MAX_VESTS * account.followers_mvest) : 0;
-  votingPower = votingPower > 10000 ? 10000 : parseInt(votingPower);
+  let votingPower = 0;
+  try {
+    const [account] = await fetch(url).then(res => res.json());
+    votingPower = account.followers_mvest >= MIN_VESTS ? parseFloat(10000 / MAX_VESTS * account.followers_mvest) : 0;
+    votingPower = votingPower > 10000 ? 10000 : parseInt(votingPower);
+  } catch (e) {
+    console.log(e);
+  }
   return votingPower;
 };
 
