@@ -12,7 +12,7 @@ const postingWif = process.env.STEEM_POSTING_WIF;
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 21600);
 
 const MIN_VESTS = 10000000; // Dolphin
-const MAX_VESTS = 5000000000; // 5 Whales
+const MAX_VESTS = 6000000000; // 6 Whales
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
