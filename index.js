@@ -4,7 +4,7 @@ const http = require('http');
 const https = require('https');
 const client = require('./helpers/redis');
 const vote = require('./events/vote');
-const slack = require('./events/slack');
+const discord = require('./events/discord');
 const utils = require('./helpers/utils');
 
 http.globalAgent.maxSockets = 100;
@@ -43,7 +43,8 @@ const parseNextBlock = async () => {
       for (let tx of block.transactions) {
         for (let op of tx.operations) {
           await vote(op);
-          slack(op);
+          //slack(op);
+          discord(op);
         }
       }
     }
