@@ -14,7 +14,7 @@ bot.on('message', msg => {
     msg.reply('Pong!');
   }
   if (msg.content.includes('beta') && msg.content.includes('?')) {
-    msg.reply('if you want to test new busy please follow the instructions in the channel #announcements');
+    msg.reply('if you want to test new busy please follow the instructions in the channel #annoucements');
   }
   if (msg.content.includes('translate') && msg.content.includes('?')) {
     msg.reply('if you want translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate');
