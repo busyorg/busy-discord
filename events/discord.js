@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const channelId = '370640103976075274';
+const channelId = process.env.DISCORD_CHANNEL_ID;
 let started;
 
 bot.on('ready', () => {
