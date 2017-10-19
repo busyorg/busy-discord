@@ -13,11 +13,11 @@ bot.on('message', msg => {
   if (msg.content === 'ping') {
     msg.reply('Pong!');
   }
-  if (msg.content.includes('beta tester ')) {
-    msg.reply('*if you want to test new busy please follow the instructions in the channel #announcements*');
+  if (msg.content.includes('beta') && msg.content.includes('?')) {
+    msg.reply('if you want to test new busy please follow the instructions in the channel #announcements');
   }
-  if (msg.content.includes('translate in ')) {
-    msg.reply('*if you want to translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate*');
+  if (msg.content.includes('translate') && msg.content.includes('?')) {
+    msg.reply('if you want translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate');
   }
 });
 
