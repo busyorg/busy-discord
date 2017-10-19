@@ -1,5 +1,4 @@
 const Bot = require('slackbots');
-const alpha = require('./alpha.json');
 
 let started;
 const settings = {
@@ -27,10 +26,6 @@ const trigger = (op) => {
 
       if (jsonMetadata.app.includes('busy/2')) {
         postMessage('activity-2', op);
-      }
-
-      if (alpha.includes(op[1].author) && !jsonMetadata.app.includes('busy')) {
-        postMessage('activity-0', op);
       }
     }
   }
