@@ -43,7 +43,7 @@ const postMessage = (op) => {
   try {
     jsonMetadata = JSON.parse(op[1].json_metadata);
   } catch (err) {}
-  const url = `https://nd.busy.org/${op[1].parent_permlink}/@${op[1].author}`;
+  const url = `https://nd.busy.org/${op[1].parent_permlink}/@${op[1].author}/${op[1].permlink}`;
   const channel = bot.channels.find('id', channelId);
   channel.send(`**${op[1].title}** *${jsonMetadata.app}*\n${url} `);
 };
