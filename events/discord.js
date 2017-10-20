@@ -31,7 +31,7 @@ bot.on('message', msg => {
     )
     && msg.content.includes('?')
   ) {
-    msg.reply('if you want translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate');
+    msg.reply('if you want to translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate');
   }
 });
 
