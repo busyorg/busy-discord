@@ -9,7 +9,7 @@ fetch.Promise = require('bluebird');
 
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
-const delay = parseInt(process.env.STEEM_VOTE_DELAY || 21600);
+const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
 const MIN_VESTS = 10000000; // Dolphin
 const MAX_VESTS = 20000000000; // 20 Whales
