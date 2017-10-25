@@ -22,7 +22,7 @@ bot.on('message', msg => {
     )
     && msg.content.includes('?')
   ) {
-    msg.reply('if you want to test new busy please follow the instructions in the channel #annoucements');
+    msg.reply('if you want to test new busy please follow the instructions in the channel #announcements');
   }
   if (
     (
