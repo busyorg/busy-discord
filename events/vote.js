@@ -12,7 +12,7 @@ const postingWif = process.env.STEEM_POSTING_WIF;
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
 const MIN_VESTS = 10000000; // Dolphin
-const MAX_VESTS = 40000000000; // 40 Whales
+const MAX_VESTS = 50000000000; // 50 Whales
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
@@ -50,20 +50,24 @@ const trigger = async (op) => {
       const hasVote = await client.getAsync(`${op[1].author}:hasVote`);
       if (!hasVote && !op[1].body.includes('@@')) {
         const weight = await calculateVotingPower(op[1].author);
-        try {
-          const result = await steem.broadcast.voteWithAsync(postingWif, {
-            voter: username,
-            author: op[1].author,
-            permlink: op[1].permlink,
-            weight,
-          });
+        if (weight) {
+          try {
+            const result = await steem.broadcast.voteWithAsync(postingWif, {
+              voter: username,
+              author: op[1].author,
+              permlink: op[1].permlink,
+              weight,
+            });
 
-          await client.setAsync(`${op[1].author}:hasVote`, 'true', 'EX', delay);
-          console.log('Vote success', op[1].author, op[1].permlink, result);
-        } catch (err) {
-          console.log('Vote error', op[1].author, op[1].permlink, err);
+            await client.setAsync(`${op[1].author}:hasVote`, 'true', 'EX', delay);
+            console.log('Vote success', op[1].author, op[1].permlink, result);
+          } catch (err) {
+            console.log('Vote error', op[1].author, op[1].permlink, err);
+          }
+          await utils.sleep(4000);
+        } else {
+          console.log('Not enought followers weight', op[1].author, op[1].permlink);
         }
-        await utils.sleep(4000);
       } else {
         console.log('Has already vote', op[1].author, op[1].permlink);
       }
