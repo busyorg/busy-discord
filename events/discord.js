@@ -15,17 +15,6 @@ bot.on('message', msg => {
   }
   if (
     (
-      msg.content.includes('test')
-      || msg.content.includes('beta')
-      || msg.content.includes('new website')
-      || msg.content.includes('new design')
-    )
-    && msg.content.includes('?')
-  ) {
-    msg.reply('if you want to test new busy please follow the instructions in the channel #announcements');
-  }
-  if (
-    (
       msg.content.includes('translate')
       || msg.content.includes('translation')
     )
