@@ -22,7 +22,7 @@ const start = async () => {
   const lastBlockNum = await client.getAsync('blockNum');
   console.log('Last Block Num', lastBlockNum);
 
-  utils.streamBlockNumFrom(lastBlockNum, async (err, blockNum) => {
+  utils.streamBlockNumFrom(lastBlockNum, 20, async (err, blockNum) => {
     awaitingBlocks.push(blockNum);
 
     if (!started) {
