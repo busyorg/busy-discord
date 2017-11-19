@@ -22,7 +22,7 @@ const start = async () => {
   const lastBlockNum = await client.getAsync('blockNum');
   console.log('Last Block Num', lastBlockNum);
 
-  utils.streamBlockNumFrom(lastBlockNum, async (err, blockNum) => {
+  utils.streamBlockNumFrom(lastBlockNum, 100, async (err, blockNum) => {
     awaitingBlocks.push(blockNum);
 
     if (!started) {
@@ -43,7 +43,7 @@ const parseNextBlock = async () => {
       for (let tx of block.transactions) {
         for (let op of tx.operations) {
           await vote(op);
-          //slack(op);
+          // slack(op);
           discord(op);
         }
       }
