@@ -25,7 +25,10 @@ bot.on('message', async msg => {
   ) {
     msg.reply('if you want to translate Busy in your language, please go to this website https://crowdin.com/project/busy if your language is available reserve it on the channel #translate');
   }
-  if (msg.content === '$leaderboard') {
+  if (
+    msg.content === '$leaderboard'
+    || msg.content === '$rank'
+  ) {
     const message = await getLeaderboardMessage();
     msg.reply(message);
   }
@@ -74,13 +77,14 @@ const getLeaderboardMessage = async () => {
   const total = users.data.total;
   let message = 'here is the last 24h Steem apps leaderboard';
   let rank = 0;
-  platforms.slice(0, 20).forEach(app => {
+  platforms.slice(0, 10).forEach(app => {
     rank++;
     const shares = parseFloat(100 / total * users.data.platforms[app.app]).toFixed(2);
     message += app.app === 'busy'
       ? `\n**${rank} ${app.app}: ${users.data.platforms[app.app]} ${shares}%**`
       : `\n${rank} ${app.app}: ${users.data.platforms[app.app]} ${shares}%`;
   });
+  message += '\nhttps://data.chainbb.com/users';
   return message;
 };
 
