@@ -77,7 +77,7 @@ const getLeaderboardMessage = async () => {
   const total = users.data.total;
   let message = 'here is the last 24h Steem apps leaderboard';
   let rank = 0;
-  platforms.slice(0, 10).forEach(app => {
+  platforms.slice(0, 20).forEach(app => {
     rank++;
     const shares = parseFloat(100 / total * users.data.platforms[app.app]).toFixed(2);
     message += app.app === 'busy'
