@@ -68,7 +68,7 @@ const postMessage = (op) => {
 };
 
 const getLeaderboardMessage = async () => {
-  const users = await fetch('https://data.chainbb.com/users').then(res => res.json());
+  const users = await fetch('https://data.chainbb.com/platforms').then(res => res.json());
   let platforms = Object.keys(users.data.platforms)
     .sort((a, b) => parseInt(users.data.platforms[b]) - parseInt(users.data.platforms[a]));
   platforms = platforms.map((app) => {
@@ -84,7 +84,7 @@ const getLeaderboardMessage = async () => {
       ? `\n**${rank} ${app.app}: ${users.data.platforms[app.app]} ${shares}%**`
       : `\n${rank} ${app.app}: ${users.data.platforms[app.app]} ${shares}%`;
   });
-  message += '\nhttps://data.chainbb.com/users';
+  message += '\nhttps://data.chainbb.com/platforms';
   return message;
 };
 
