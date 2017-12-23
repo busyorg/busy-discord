@@ -11,7 +11,7 @@ const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
-const MIN_VESTS = 20000000; // 2 Dolphin
+const MIN_VESTS = 20000000; // 2 Dolphins
 const MAX_VESTS = 250000000000; // 250 Whales
 
 const calculateVotingPower = async (username) => {
