@@ -67,7 +67,7 @@ const trigger = async (op) => {
           }
           await utils.sleep(4000);
         } else {
-          console.log('Not enought followers weight', op[1].author, op[1].permlink);
+          console.log('Not enought followers weight', op[1].author, op[1].permlink, weight);
         }
       } else {
         console.log('Has already vote', op[1].author, op[1].permlink);
