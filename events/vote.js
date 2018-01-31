@@ -1,28 +1,38 @@
 const steem = require('steem');
 const _ = require('lodash');
 const fetch = require('node-fetch');
-
+fetch.Promise = require('bluebird');
 const utils = require('../helpers/utils');
 const client = require('../helpers/redis');
 
-fetch.Promise = require('bluebird');
-
 const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
-const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
-const MIN_VESTS = 100000000; // 10 Dolphins ~ 50 000 SP
-const MAX_VESTS = 500000000000; // 500 Whales ~ 250 000 000 SP
+// Delay between 2 votes is 12 hours
+const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
+// Amount required to get the minimum upvote (0.5%) is 100000000 VESTS ~ 10 Dolphins ~ 50 000 SP
+const minVests = process.env.MIN_VESTS || 100000000;
+// Amount required to get 100% upvote is 500000000000 VESTS ~ 500 Whales ~ 250 000 000 SP
+const maxVests = process.env.MAX_VESTS || 500000000000;
+// Don't upvote user beyond 1000000000000 VESTS
+const limitVests = process.env.LIMIT_VESTS || 1000000000000;
+// Don't upvote more than 20%
+const maxUpvote = process.env.MAX_UPVOTE || 2000;
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
   let votingPower = 0;
   try {
     const [account] = await fetch(url).then(res => res.json());
-    votingPower = account.followers_mvest >= MIN_VESTS ? parseFloat(10000 / MAX_VESTS * account.followers_mvest) : 0;
+    votingPower = account.followers_mvest >= minVests ? parseFloat(10000 / maxVests * account.followers_mvest) : 0;
     votingPower = votingPower > 10000 ? 10000 : parseFloat(votingPower);
-    votingPower = (votingPower > 0 && votingPower < 5) ? 5 : parseInt(votingPower);
-    // votingPower = votingPower > 5000 ? 5000 : votingPower;
+    votingPower = (votingPower > 0 && votingPower < 50) ? 50 : parseInt(votingPower);
+    if (maxUpvote) {
+      votingPower = votingPower > maxUpvote ? maxUpvote : votingPower;
+    }
+    if (limitVests && account.followers_mvest >= limitVests) {
+      votingPower = 0;
+    }
   } catch (e) {
     console.log(e);
   }

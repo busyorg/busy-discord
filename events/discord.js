@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
-const bot = new Discord.Client();
-
 fetch.Promise = require('bluebird');
 
-const channelId = process.env.DISCORD_CHANNEL_ID;
+const bot = new Discord.Client();
+const discordToken = process.env.DISCORD_TOKEN;
+const discordChannelId = process.env.DISCORD_CHANNEL_ID;
 let started;
 
 bot.on('ready', () => {
@@ -34,7 +34,9 @@ bot.on('message', async msg => {
   }
 });
 
-bot.login(process.env.DISCORD_TOKEN);
+if (discordToken) {
+  bot.login(discordToken);
+}
 
 /** Trigger Every Comment Or Post From Busy */
 const trigger = (op) => {
@@ -63,7 +65,7 @@ const postMessage = (op) => {
     jsonMetadata = JSON.parse(op[1].json_metadata);
   } catch (err) {}
   const url = `https://busy.org/${op[1].parent_permlink}/@${op[1].author}/${op[1].permlink}`;
-  const channel = bot.channels.find('id', channelId);
+  const channel = bot.channels.find('id', discordChannelId);
   channel.send(`**${op[1].title}** *${jsonMetadata.app}*\n${url} `);
 };
 
