@@ -10,14 +10,14 @@ const postingWif = process.env.STEEM_POSTING_WIF;
 
 // Delay between 2 votes is 12 hours
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
-// Amount required to get the minimum upvote (0.5%) is 100000000 VESTS ~ 10 Dolphins ~ 50 000 SP
-const minVests = process.env.MIN_VESTS || 100000000;
-// Amount required to get 100% upvote is 500000000000 VESTS ~ 500 Whales ~ 250 000 000 SP
-const maxVests = process.env.MAX_VESTS || 500000000000;
+// Amount required to get the minimum upvote (0.5%) is 10000000 VESTS ~ 1 Dolphin ~ 5 000 SP
+const minVests = process.env.MIN_VESTS || 10000000;
+// Amount required to get 100% upvote is 1000000000000 VESTS ~ 500 Whales ~ 500 000 000 SP
+const maxVests = process.env.MAX_VESTS || 1000000000000;
 // Don't upvote user beyond 1000000000000 VESTS
 const limitVests = process.env.LIMIT_VESTS || 1000000000000;
-// Don't upvote more than 20%
-const maxUpvote = process.env.MAX_UPVOTE || 2000;
+// Don't upvote more than 25%
+const maxUpvote = process.env.MAX_UPVOTE || 2500;
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
