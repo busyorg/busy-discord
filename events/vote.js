@@ -26,7 +26,7 @@ const calculateVotingPower = async (username) => {
     const [account] = await fetch(url).then(res => res.json());
     votingPower = account.followers_mvest >= minVests ? parseFloat(10000 / maxVests * account.followers_mvest) : 0;
     votingPower = votingPower > 10000 ? 10000 : parseFloat(votingPower);
-    votingPower = (votingPower > 0 && votingPower < 50) ? 50 : parseInt(votingPower);
+    votingPower = (votingPower > 0 && votingPower < 5) ? 5 : parseInt(votingPower);
     if (maxUpvote) {
       votingPower = votingPower > maxUpvote ? maxUpvote : votingPower;
     }
