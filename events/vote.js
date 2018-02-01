@@ -12,8 +12,8 @@ const postingWif = process.env.STEEM_POSTING_WIF;
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 // Amount required to get the minimum upvote (0.5%) is 10000000 VESTS ~ 1 Dolphin ~ 5 000 SP
 const minVests = process.env.MIN_VESTS || 10000000;
-// Amount required to get 100% upvote is 1000000000000 VESTS ~ 500 Whales ~ 500 000 000 SP
-const maxVests = process.env.MAX_VESTS || 1000000000000;
+// Amount required to get 100% upvote is 2000000000000 VESTS ~ 1 000 Whales ~ 1 000 000 000 SP
+const maxVests = process.env.MAX_VESTS || 2000000000000;
 // Don't upvote user beyond 1000000000000 VESTS
 const limitVests = process.env.LIMIT_VESTS || 1000000000000;
 // Don't upvote more than 25%
