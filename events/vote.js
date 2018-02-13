@@ -10,14 +10,14 @@ const postingWif = process.env.STEEM_POSTING_WIF;
 
 // Delay between 2 votes is 12 hours
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
-// Amount required to get the minimum upvote (0.5%) is 100000000 VESTS ~ 10 Dolphins ~ 50 000 SP
-const minVests = process.env.MIN_VESTS || 100000000;
-// Amount required to get 100% upvote is 500000000000 VESTS ~ 500 Whales ~ 250 000 000 SP
-const maxVests = process.env.MAX_VESTS || 500000000000;
-// Don't upvote user beyond 1000000000000 VESTS
-const limitVests = process.env.LIMIT_VESTS || 1000000000000;
-// Don't upvote more than 20%
-const maxUpvote = process.env.MAX_UPVOTE || 2000;
+// Amount required to get the minimum upvote (1%) is 20000000 VESTS ~ 2 Dolphins ~ 10 000 SP
+const minVests = process.env.MIN_VESTS || 20000000;
+// Amount required to get 100% upvote is 4000000000000 VESTS ~ 2 000 Whales ~ 2 000 000 000 SP
+const maxVests = process.env.MAX_VESTS || 4000000000000;
+// Don't upvote user beyond 10000000000000 VESTS
+const limitVests = process.env.LIMIT_VESTS || 10000000000000;
+// Don't upvote more than 25%
+const maxUpvote = process.env.MAX_UPVOTE || 2500;
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
@@ -26,7 +26,7 @@ const calculateVotingPower = async (username) => {
     const [account] = await fetch(url).then(res => res.json());
     votingPower = account.followers_mvest >= minVests ? parseFloat(10000 / maxVests * account.followers_mvest) : 0;
     votingPower = votingPower > 10000 ? 10000 : parseFloat(votingPower);
-    votingPower = (votingPower > 0 && votingPower < 50) ? 50 : parseInt(votingPower);
+    votingPower = (votingPower > 0 && votingPower < 6) ? 6 : parseInt(votingPower);
     if (maxUpvote) {
       votingPower = votingPower > maxUpvote ? maxUpvote : votingPower;
     }
