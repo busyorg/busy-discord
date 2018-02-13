@@ -10,6 +10,9 @@ const utils = require('./helpers/utils');
 http.globalAgent.maxSockets = 100;
 https.globalAgent.maxSockets = 100;
 
+// From which block we start to stream the blockchain
+const startBlock = parseInt(process.env.START_BLOCK || 19828000);
+
 if (process.env.STEEMJS_URL) {
   steem.api.setOptions({ url: process.env.STEEMJS_URL });
 }
@@ -19,7 +22,8 @@ let awaitingBlocks = [];
 const start = async () => {
   let started;
 
-  const lastBlockNum = await client.getAsync('blockNum');
+  let lastBlockNum = await client.getAsync('blockNum');
+  lastBlockNum = !lastBlockNum? startBlock : lastBlockNum;
   console.log('Last Block Num', lastBlockNum);
 
   utils.streamBlockNumFrom(lastBlockNum, 660, async (err, blockNum) => {
