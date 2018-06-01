@@ -1,75 +1,52 @@
-const steem = require('steem');
-const _ = require('lodash');
-const http = require('http');
-const https = require('https');
-const client = require('./helpers/redis');
-const vote = require('./events/vote');
-const discord = require('./events/discord');
-const utils = require('./helpers/utils');
+const Discord = require('discord.js');
+const fetch = require('node-fetch');
+fetch.Promise = require('bluebird');
 
-http.globalAgent.maxSockets = 100;
-https.globalAgent.maxSockets = 100;
+const bot = new Discord.Client();
+const discordToken = process.env.DISCORD_TOKEN;
+// const discordChannelId = process.env.DISCORD_CHANNEL_ID;
+let started;
 
-// From which block we start to stream the blockchain
-const startBlock = parseInt(process.env.START_BLOCK || 19828000);
+bot.on('ready', () => {
+  console.log(`Logged in as ${bot.user.tag}!`);
+  started = true;
+});
 
-if (process.env.STEEMJS_URL) {
-  steem.api.setOptions({ url: process.env.STEEMJS_URL });
+bot.on('message', async msg => {
+  if (msg.content === '$ping') {
+    msg.reply('Pong!');
+  }
+  if (
+    msg.content === '$leaderboard'
+    || msg.content === '$rank'
+  ) {
+    const message = await getLeaderboardMessage();
+    msg.reply(message);
+  }
+});
+
+if (discordToken) {
+  bot.login(discordToken);
 }
 
-let awaitingBlocks = [];
+const getLeaderboardMessage = async () => {
+  const objApps = await fetch('https://steem-sincerity.dapptools.info/s/api/most-used-apps/')
+    .then(res => res.json());
 
-const start = async () => {
-  let started;
-
-  let lastBlockNum = await client.getAsync('blockNum');
-  lastBlockNum = !lastBlockNum? startBlock : lastBlockNum;
-  console.log('Last Block Num', lastBlockNum);
-
-  utils.streamBlockNumFrom(lastBlockNum, 660, async (err, blockNum) => {
-    awaitingBlocks.push(blockNum);
-
-    if (!started) {
-      started = true;
-      await parseNextBlock();
-    }
+  let total = 0;
+  objApps.data.forEach(app => {
+    total += app.active_accounts_count;
   });
+
+  let rank = 0;
+  let message = 'here is the last 7 days active users leaderboard';
+  objApps.data.slice(0, 20).forEach(app => {
+    rank++;
+    const shares = parseFloat(100 / total * app.active_accounts_count).toFixed(2);
+    message += app.app === 'busy'
+      ? `\n**${rank} ${app.app}: ${app.active_accounts_count} ${shares}%**`
+      : `\n${rank} ${app.app}: ${app.active_accounts_count} ${shares}%`;
+  });
+  message += '\nhttp://steemreports.com/sincerity-most-used-apps/';
+  return message;
 };
-
-const parseNextBlock = async () => {
-  if (awaitingBlocks[0]) {
-    const blockNum = awaitingBlocks[0];
-
-    /** Parse Block And Do Vote */
-    const block = await steem.api.getBlockWithAsync({ blockNum });
-
-    if (_.has(block, 'transactions[0].operations')) {
-      for (let tx of block.transactions) {
-        for (let op of tx.operations) {
-          await vote(op);
-          // slack(op);
-          discord(op);
-        }
-      }
-    }
-
-    /** Store On Redis Last Parsed Block */
-    try {
-      await client.setAsync('blockNum', blockNum);
-      console.log('Block Parsed', blockNum);
-    } catch (err) {
-      console.log('Error Save Redis', blockNum, err);
-    }
-
-    delete awaitingBlocks[0];
-    awaitingBlocks = _.compact(awaitingBlocks);
-
-    await parseNextBlock();
-
-  } else {
-    await utils.sleep(4000);
-    await parseNextBlock();
-  }
-};
-
-start();
