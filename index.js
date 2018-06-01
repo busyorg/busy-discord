@@ -43,7 +43,7 @@ const getLeaderboardMessage = async () => {
   objApps.data.slice(0, 20).forEach(app => {
     rank++;
     const shares = parseFloat(100 / total * app.active_accounts_count).toFixed(2);
-    message += app.app === 'busy'
+    message += app.app === 'busy' || app.app === 'bsteem'
       ? `\n**${rank} ${app.app}: ${app.active_accounts_count} ${shares}%**`
       : `\n${rank} ${app.app}: ${app.active_accounts_count} ${shares}%`;
   });
