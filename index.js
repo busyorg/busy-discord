@@ -4,8 +4,11 @@ fetch.Promise = require('bluebird');
 
 const bot = new Discord.Client();
 const discordToken = process.env.DISCORD_TOKEN;
-// const discordChannelId = process.env.DISCORD_CHANNEL_ID;
 let started;
+
+setInterval(() => {
+  console.log('heartbeat', Date.now());
+}, 10 * 1000);
 
 bot.on('ready', () => {
   console.log(`Logged in as ${bot.user.tag}!`);
