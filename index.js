@@ -1,6 +1,13 @@
+const express = require('express');
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 fetch.Promise = require('bluebird');
+
+const app = express();
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Listening on ${port}`);
+});
 
 const bot = new Discord.Client();
 const discordToken = process.env.DISCORD_TOKEN;
